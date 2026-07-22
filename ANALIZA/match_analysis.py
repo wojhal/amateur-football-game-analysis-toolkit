@@ -90,13 +90,24 @@ for req_col in ["Player", "Team", "Position"]:
     if req_col not in df.columns:
         df[req_col] = "Unknown"
 
+# --- ADD FANTOM BENCHMARK PLAYER ---
+fantom_row = {
+    "Player": "Fantom",
+    "Team": "Benchmark",
+    "Position": np.nan
+}
+for col in ALL_REQUIRED_COLS:
+    fantom_row[col] = 0.0
+
+df = pd.concat([df, pd.DataFrame([fantom_row])], ignore_index=True)
+
 # 4. Create Display Label & Dynamic Positional Ranking
 df["Display_Label"] = (
     df["Player"].astype(str)
     + " ("
     + df["Team"].astype(str)
     + ") - "
-    + df["Position"].astype(str)
+    + df["Position"].fillna("N/A").astype(str)
 )
 
 # Convert metric columns to numeric safely
